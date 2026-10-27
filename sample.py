@@ -56,6 +56,9 @@ NUMERIC_COLUMNS = [
     "capital_loss",
     "hours_per_week",
 ]
+CATEGORICAL_COLUMNS = [
+    column for column in FEATURE_COLUMNS if column not in NUMERIC_COLUMNS
+]
 TARGET_NAMES = ["<=50K", ">50K"]
 
 
@@ -94,7 +97,7 @@ def clean_split(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series, int, int]:
     if data.shape[1] != len(FEATURE_COLUMNS) + 1:
         raise ValueError(f"Expected 15 columns, received {data.shape[1]}")
 
-    for column in data.select_dtypes(include="object").columns:
+    for column in CATEGORICAL_COLUMNS + [TARGET_COLUMN]:
         data[column] = data[column].map(
             lambda value: value.strip() if isinstance(value, str) else value
         )
@@ -122,9 +125,6 @@ def main() -> None:
     X_train, y_train, dropped_train, missing_train = clean_split(train_raw)
     X_test, y_test, dropped_test, missing_test = clean_split(test_raw)
 
-    categorical_columns = [
-        column for column in FEATURE_COLUMNS if column not in NUMERIC_COLUMNS
-    ]
     numeric_pipeline = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="median")),
@@ -140,7 +140,7 @@ def main() -> None:
     preprocessing = ColumnTransformer(
         transformers=[
             ("numeric", numeric_pipeline, NUMERIC_COLUMNS),
-            ("categorical", categorical_pipeline, categorical_columns),
+            ("categorical", categorical_pipeline, CATEGORICAL_COLUMNS),
         ]
     )
     model = Pipeline(
