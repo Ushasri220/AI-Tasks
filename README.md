@@ -1,5 +1,7 @@
 # UCI Adult Income: End-to-End Machine Learning Pipeline
 
+Part of the AI-Tasks repository for AI-related assignments.
+
 This assignment builds a binary classifier to predict whether an individual's
 income exceeds $50,000 using the UCI Adult (Census Income) dataset.
 
