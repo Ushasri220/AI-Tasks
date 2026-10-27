@@ -28,6 +28,25 @@ The script prints the evaluation and saves the same report to
 cleaning counts, all requested metrics, the confusion matrix, a per-class
 breakdown, metric explanations, and a short conclusion.
 
+## Run on Render
+
+The repository includes a Render Blueprint in `render.yaml` for a Cron Job.
+To connect it to your Render account:
+
+1. Open the [Render Cron Job setup](https://dashboard.render.com/cron/new) and
+   connect your GitHub account if prompted.
+2. Select `Ushasri220/AI-Tasks` and the `main` branch. Render can use the
+   Blueprint in the repository to configure the job.
+3. After the first deployment, open the job's **Runs** page and choose
+   **Trigger Run** to run the pipeline immediately.
+4. The Blueprint schedule is set to January 1 yearly because Render Cron Jobs
+   require a schedule. If this is for a one-time run, suspend or delete the
+   Cron Job after the manual run completes to prevent future runs and charges.
+
+The Cron Job downloads the dataset each time it runs and writes its evaluation
+report to the job logs. Render Cron Jobs do not retain local files after a run,
+so `evaluation_results.txt` is not a persistent downloadable artifact.
+
 ## Pipeline
 
 - Trims inconsistent whitespace, treats `?` and empty strings as missing, and
